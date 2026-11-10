@@ -1,0 +1,9 @@
+.env
+*.db
+__pycache__/
+.pytest_cache/
+.venv/
+.ipynb_checkpoints/
+*.json.key
+service_account*.json
+.DS_Store

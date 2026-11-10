@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MarketMind-AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <aside class="rail">
+    <div class="brand">MarketMind<span>AI</span></div>
+    <nav id="nav">
+      <button data-tab="market" class="on">Market</button>
+      <button data-tab="intraday">Intraday</button>
+      <button data-tab="sip">SIP planner</button>
+      <button data-tab="funds">Mutual funds</button>
+      <button data-tab="ipo">IPO</button>
+    </nav>
+    <div class="conn">
+      <label for="apiBase">Backend address</label>
+      <input id="apiBase" type="url" spellcheck="false">
+      <small id="apiStatus">Checking connection</small>
+    </div>
+  </aside>
+
+  <main>
+    <p class="notice">Educational analysis, not investment advice. Markets carry risk of loss.</p>
+
+    <section id="tab-market" class="tab on">
+      <h1>Market</h1>
+      <div id="indices" class="cards"></div>
+      <form id="form-quote" class="inline">
+        <label>Stock symbol <input name="symbol" value="RELIANCE" required></label>
+        <button>Show 6-month trend</button>
+      </form>
+      <div id="out-market"></div>
+    </section>
+
+    <section id="tab-intraday" class="tab">
+      <h1>Intraday</h1>
+      <form id="form-intraday" class="grid">
+        <label>Symbol <input name="symbol" value="TCS" required></label>
+        <label>Bar size
+          <select name="interval"><option>5m</option><option>15m</option><option>1m</option><option>60m</option></select></label>
+        <label>Capital (₹) <input name="capital" type="number" value="100000" min="1000" required></label>
+        <label>Risk per trade (%) <input name="risk_pct" type="number" value="1" step="0.25" min="0.25" max="5" required></label>
+        <button>Run intraday agent</button>
+      </form>
+      <div id="out-intraday"></div>
+    </section>
+
+    <section id="tab-sip" class="tab">
+      <h1>SIP planner</h1>
+      <form id="form-sip" class="grid">
+        <label>Monthly SIP (₹) <input name="monthly" type="number" value="10000" min="100" required></label>
+        <label>Years <input name="years" type="number" value="15" min="1" max="50" required></label>
+        <label>Expected return (% a year) <input name="annual_return" type="number" value="12" step="0.5" required></label>
+        <label>Yearly step-up (%) <input name="step_up" type="number" value="0" step="1" min="0"></label>
+        <label>Goal amount (₹, optional) <input name="target" type="number" min="0"></label>
+        <label>Back-test fund code (optional) <input name="scheme_code" type="number" placeholder="from Mutual funds tab"></label>
+        <button>Plan my SIP</button>
+      </form>
+      <div id="out-sip"></div>
+    </section>
+
+    <section id="tab-funds" class="tab">
+      <h1>Mutual funds</h1>
+      <form id="form-funds" class="inline">
+        <label>Fund name <input name="q" value="parag parikh flexi" required minlength="2"></label>
+        <button>Search funds</button>
+      </form>
+      <ul id="fund-results" class="list"></ul>
+      <div id="out-funds"></div>
+    </section>
+
+    <section id="tab-ipo" class="tab">
+      <h1>IPO</h1>
+      <ul id="ipo-list" class="list"></ul>
+      <form id="form-ipo" class="grid">
+        <label>Company <input name="name" required></label>
+        <label>Upper price band (₹) <input name="price_high" type="number" step="0.01" required></label>
+        <label>Lot size <input name="lot_size" type="number" required></label>
+        <label>EPS after issue (₹) <input name="eps" type="number" step="0.01" required></label>
+        <label>Peer P/E <input name="peer_pe" type="number" step="0.1" required></label>
+        <label>Grey market premium (₹) <input name="gmp" type="number" step="0.5" value="0"></label>
+        <label>Subscription (times) <input name="subscription_x" type="number" step="0.1" value="0"></label>
+        <button>Analyse IPO</button>
+      </form>
+      <div id="out-ipo"></div>
+    </section>
+  </main>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
