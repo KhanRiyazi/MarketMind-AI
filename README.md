@@ -1,3 +1,20 @@
+tep 3: Make sure Actions is enabled
+Go to Settings → Actions → General.
+Under “Actions permissions”, choose Allow all actions and reusable workflows, then click Save.
+Step 4: Run the workflow
+Open the Actions tab.
+In the left sidebar, click deploy-pages. It only appears there once the file exists on main.
+Click the Run workflow dropdown on the right, keep branch main, and click the green Run workflow button.
+Wait about a minute until the run shows a green check.
+
+If the run fails, click it, open the failed step, and send me the error text.
+
+
+cd C:\Users\Dell\Desktop\MarketMind-AI\frontend
+python -m http.server 5500
+
+uvicorn app.main:app --reload
+
 # MarketMind-AI
 
 Four analysis agents for Indian retail investors, behind a FastAPI backend and a plain HTML/JS dashboard.
