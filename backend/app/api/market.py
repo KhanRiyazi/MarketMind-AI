@@ -20,10 +20,10 @@ def get_quote(symbol: str):
 
 
 @router.get("/history/{symbol}")
-def get_history(symbol: str, period: str = "6mo", interval: str = "1d"):
+def get_history(symbol: str, period: str = "2y", interval: str = "1d", show: int = 125):
     try:
         df = market_data.history(symbol, period, interval)
     except ValueError as e:
         raise HTTPException(400, str(e))
-    df = df.assign(sma50=ind.sma(df["close"], 50), sma200=ind.sma(df["close"], 200))
+    df = df.assign(sma50=ind.sma(df["close"], 50), sma200=ind.sma(df["close"], 200)).tail(show)
     return {"symbol": symbol.upper(), "candles": to_records(df[["close", "sma50", "sma200"]])}

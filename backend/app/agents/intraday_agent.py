@@ -58,5 +58,5 @@ class IntradayAgent(BaseAgent):
         fallback = (f"{symbol.upper()} reads {bias.lower()} (score {score:+d}): " + "; ".join(reasons[:3]) + ". "
                     + (f"Stop sits {abs(price - plan['stop']):.2f} away, sized to risk {risk_pct}% of capital."
                        if plan else "Signals conflict, so no trade is suggested."))
-        return self.finish(bias, metrics, fallback, plan=plan, levels=levels,
+        return self.finish(bias, metrics, fallback, plan=plan, levels=levels, as_of=str(d.index[-1]),
                            chart=to_records(d.tail(120)[["close", "vwap", "ema9", "ema21"]]))

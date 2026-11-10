@@ -47,9 +47,11 @@ const UI = {
     if (p) rows.push(this.table("Trade plan (" + p.side + ")", [["Entry", this.num(p.entry)], ["Stop", this.num(p.stop)],
       ["Target 1", this.num(p.target1)], ["Target 2", this.num(p.target2)], ["Quantity", p.quantity], ["Maximum loss", this.inr(p.max_loss)]]));
     if (r.levels) rows.push(this.table("Yesterday's levels", Object.entries(r.levels).map(([k, v]) => [k.toUpperCase(), this.num(v)])));
+    if (r.as_of) parts.push(this.el("p", { className: "msg" }, "Latest bar: " + r.as_of.replace("T", " ").slice(0, 16)));
     parts.push(this.chartBox("c-intraday"), this.el("div", { className: "two" }, rows));
     this.show("out-intraday", ...parts);
-    Charts.line("c-intraday", r.chart.map(c => c.index.slice(5, 16)), [
+    const fmt = t => { const d = t.replace("T", " "); return d.slice(8, 10) + "/" + d.slice(5, 7) + " " + d.slice(11, 16); };
+    Charts.line("c-intraday", r.chart.map(c => fmt(c.index)), [
       { label: "Price", data: r.chart.map(c => c.close) }, { label: "VWAP", data: r.chart.map(c => c.vwap), dash: [5, 4] },
       { label: "EMA 9", data: r.chart.map(c => c.ema9) }, { label: "EMA 21", data: r.chart.map(c => c.ema21) }]);
   },
@@ -74,7 +76,7 @@ const UI = {
     const m = r.metrics, c = k => this.pct(m[k]);
     this.show("out-funds", this.el("h2", {}, r.scheme), this.verdict(r), this.chartBox("c-fund"), this.table("Numbers", [
       ["Score", m.score + " / 100"], ["1-year return", c("cagr_1y")], ["3-year CAGR", c("cagr_3y")], ["5-year CAGR", c("cagr_5y")],
-      ["Volatility", c("volatility")], ["Sharpe ratio", m.sharpe], ["Worst fall", c("max_drawdown")], ["Latest NAV", this.num(m.latest_nav, 4)]]));
+      ["Volatility (3y)", c("volatility")], ["Sharpe ratio", m.sharpe], ["Worst fall (3y)", c("max_drawdown")], ["Latest NAV", this.num(m.latest_nav, 4)]]));
     Charts.line("c-fund", r.chart.map(x => x.date), [{ label: "NAV", data: r.chart.map(x => x.nav) }]);
   },
   ipoList(ipos, onPick) {

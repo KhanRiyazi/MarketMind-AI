@@ -39,7 +39,7 @@ async function loadIpos() {
 }
 
 bindForm("#form-quote", "out-market", async d =>
-  UI.trend(await API.get("/api/market/history/" + encodeURIComponent(d.symbol) + "?period=6mo")));
+  UI.trend(await API.get("/api/market/history/" + encodeURIComponent(d.symbol) + "?period=2y")));
 
 bindForm("#form-intraday", "out-intraday", async d =>
   UI.intraday(await API.get("/api/intraday/" + encodeURIComponent(d.symbol) + "?" + new URLSearchParams({

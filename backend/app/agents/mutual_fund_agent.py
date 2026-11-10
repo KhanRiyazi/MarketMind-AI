@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from app.agents import BaseAgent
 from app.analytics import returns, risk
 from app.config import settings
@@ -15,14 +16,20 @@ class MutualFundAgent(BaseAgent):
 
     def analyze_series(self, name, nav) -> dict:
         end = nav.index[-1]
-        rets = nav.pct_change().dropna()
+        # Risk stats use the last 3 years so they match the 3-year CAGR.
+        win = nav[nav.index > end - pd.DateOffset(years=3)]
+        if len(win) < 250:  # young fund: use all history
+            win = nav
+        rets = win.pct_change().dropna()
+        if len(rets) < 20:
+            raise ValueError("Not enough NAV history to analyse this fund.")
         trailing = {}
         for y in (1, 3, 5):
             past = nav[nav.index <= end - np.timedelta64(365 * y, "D")]
             trailing[f"cagr_{y}y"] = round(returns.cagr(float(past.iloc[-1]), float(nav.iloc[-1]), y), 4) if len(past) else None
 
         vol, sh = risk.volatility(rets), risk.sharpe(rets, settings.risk_free_rate)
-        mdd = risk.max_drawdown(nav)
+        mdd = risk.max_drawdown(win)
         base = trailing["cagr_3y"] if trailing["cagr_3y"] is not None else trailing["cagr_1y"]
         score = 50 + 20 * (sh - 0.5) + 50 * ((base or 0) - 0.12) - 40 * (abs(mdd) - 0.20)
         score = int(max(0, min(100, round(score))))
@@ -33,7 +40,7 @@ class MutualFundAgent(BaseAgent):
         c3 = trailing["cagr_3y"]
         fallback = (f"{name} scores {score}/100 ({verdict.lower()}). "
                     + (f"3-year CAGR is {c3:.1%}, " if c3 is not None else "Under 3 years of history, ")
-                    + f"with {vol:.0%} volatility and a worst fall of {abs(mdd):.0%}. Compare against category peers before deciding.")
+                    + f"with {vol:.0%} volatility and a worst fall of {abs(mdd):.0%} over the period measured. Compare against category peers before deciding.")
         step = max(1, len(nav) // 150)
         chart = [{"date": d.strftime("%Y-%m-%d"), "nav": round(float(v), 4)} for d, v in nav.iloc[::step].items()]
         return self.finish(verdict, metrics, fallback, scheme=name, chart=chart)

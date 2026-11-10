@@ -47,7 +47,7 @@ form button:disabled{opacity:.55;cursor:progress}
 table{width:100%;border-collapse:collapse}
 td,th{text-align:left;padding:7px 4px;border-bottom:1px solid var(--line)} td:last-child{text-align:right;font-weight:600}
 .list{list-style:none;padding:0;margin:0 0 24px;display:grid;gap:8px}
-.list button{all:unset;cursor:pointer;display:block;width:100%;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.list button{all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px}
 .list button:hover,.list button:focus-visible{border-color:var(--teal)}
 .list small{color:var(--muted);display:block}
 .msg{padding:12px 14px;border-radius:6px;background:var(--panel);border:1px solid var(--line)} .msg.err{border-color:var(--loss);color:var(--loss)}
